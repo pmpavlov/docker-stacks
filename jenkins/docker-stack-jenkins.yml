@@ -1,17 +1,23 @@
 version: '3.6'
 
 services:
-  main:
+  jenkins:
     image: jenkins
+    deploy:
+      replicas: 1
+    volumes:
+      - jenkins_home:/var/jenkins_home
     ports:
       - 8080:8080
       - 50000:50000
     secrets:
       - jenkins-user
       - jenkins-pass
-
+    restart: always
 secrets:
   jenkins-user:
     external: true
   jenkins-pass:
     external: true
+volumes:
+    jenkins_home:    
