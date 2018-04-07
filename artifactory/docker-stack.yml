@@ -24,7 +24,7 @@ services:
         constraints: [node.role != manager]
 
   artifactory:
-    image: docker.bintray.io/jfrog/artifactory-pro:5.4.4
+    image: jfrog-docker-reg2.bintray.io/jfrog/artifactory-pro:latest
     ports:
      - 8081:8081
     depends_on:
@@ -49,7 +49,7 @@ services:
      #- EXTRA_JAVA_OPTIONS=-Xmx4g
 
   nginx:
-    image: docker.bintray.io/jfrog/nginx-artifactory-pro:5.4.4
+    image: jfrog-docker-reg2.bintray.io/jfrog/reg2/jfrog/nginx-artifactory-pro:latest
     ports:
      - 80:80
      - 443:443
