@@ -1,3 +1,5 @@
+[![Docker Repository on Quay](https://quay.io/repository/ppavlov/jenkins-master/status "Docker Repository on Quay")](https://quay.io/repository/ppavlov/jenkins-master)
+
 Jenkins Setup
 =======================
 This repository contains a Docker Swarm setup to create an automated
