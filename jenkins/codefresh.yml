@@ -14,3 +14,12 @@ steps:
    image_name: ppavlov/jenkins-master
    registry: quay
    fail_fast: false
+  PushImageLatest:
+   type: push
+   title: Push image with latest tag
+   candidate: ${{build-image}}
+   tag: latest
+   when:
+     condition:
+       all:
+         executeForMasterBranch: "'${{CF_BRANCH}}' == 'master'"
