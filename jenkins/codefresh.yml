@@ -13,9 +13,6 @@ steps:
    tag: ${{CF_BRANCH}}
    image_name: ppavlov/jenkins-master
    registry: quay
-   credentials:
-      username: ${{quayUsername}}
-      password: ${{quayPassword}}
   Scan:
     image: codefresh/klar
     commands:
