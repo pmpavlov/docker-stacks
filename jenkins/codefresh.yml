@@ -3,6 +3,8 @@ steps:
   BuildImage:
     type: build
     title: Building Image
+    description: Building Jenkins Master Image
+    dockerfile: jenkins/Dockerfile
     image_name: ppavlov/jenkins-master
     tag: ${{CF_BRANCH}}
   PushToRegistry:
