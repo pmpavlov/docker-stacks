@@ -1,7 +1,9 @@
 credentials
+credentials-binding
 structs
 script-security
 slack
+matrix-project
 branch-api
 cloudbees-folder
 ssh-credentials
@@ -48,6 +50,9 @@ apache-httpcomponents-client-4-api
 git
 junit
 github
+github-branch-source
+github-api
+git-server
 swarm
 thinBackup
 github-oauth
