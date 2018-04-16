@@ -12,7 +12,7 @@ steps:
    candidate: ${{BuildImage}}
    tag: ${{CF_BRANCH}}
    image_name: ppavlov/jenkins-master
-   registry: quay.io
+   registry: quay
    credentials:
       username: ${{quayUsername}}
       password: ${{quayPassword}}
