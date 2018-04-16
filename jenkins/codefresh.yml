@@ -19,6 +19,7 @@ steps:
    title: Push image with latest tag
    candidate: ${{BuildImage}}
    tag: latest
+   registry: quay
    when:
      condition:
        all:
