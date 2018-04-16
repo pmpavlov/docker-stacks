@@ -18,7 +18,7 @@ steps:
     image: codefresh/klar
     commands:
       - set -o pipefail
-      - /klar codefresh/demochat:${{CF_BRANCH}} | tee ./report.txt
+      - /klar ppavlov/jenkins-master:${{CF_BRANCH}} | tee ./report.txt
     on_success:
      metadata:
         set:
