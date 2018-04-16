@@ -13,6 +13,7 @@ steps:
    tag: ${{CF_BRANCH}}
    image_name: ppavlov/jenkins-master
    registry: quay
+   fail_fast: false
   Scan:
     image: codefresh/klar
     commands:
