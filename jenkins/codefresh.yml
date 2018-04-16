@@ -14,28 +14,3 @@ steps:
    image_name: ppavlov/jenkins-master
    registry: quay
    fail_fast: false
-  Scan:
-    image: codefresh/klar
-    commands:
-      - set -o pipefail
-      - /klar ppavlov/jenkins-master:${{CF_BRANCH}} | tee ./report.txt
-    on_success:
-     metadata:
-        set:
-          - ${{BuildImage.imageId}}:
-              - CLAIR_SECURITY: true
-    on_fail:
-      metadata:
-        set:
-          - ${{BuildImage.imageId}}:
-              - CLAIR_SECURITY: false
-    fail_fast: false
-  archive_report:
-    image: mesosphere/aws-cli
-    commands:
-      - aws s3 cp ./report.txt s3://${{S3_BUCKETNAME}}/${{CF_BUILD_ID}}.txt
-    on_success:
-     metadata:
-        set:
-          - ${{BuildImage.imageId}}:
-              - CLAIR_REPORT: "https://s3.${{AWS_DEFAULT_REGION}}.amazonaws.com/${{S3_BUCKETNAME}}/${{CF_BUILD_ID}}.txt"
