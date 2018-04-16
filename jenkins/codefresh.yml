@@ -17,7 +17,7 @@ steps:
   PushImageLatest:
    type: push
    title: Push image with latest tag
-   candidate: ${{build-image}}
+   candidate: ${{BuildImage}}
    tag: latest
    when:
      condition:
