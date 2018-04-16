@@ -1,0 +1,41 @@
+version: '1.0'
+steps:
+  BuildImage:
+    type: build
+    title: Building Image
+    image_name: ppavlov/jenkins-master
+    tag: ${{CF_BRANCH}}
+  PushToRegistry:
+   type: push
+   candidate: ${{BuildImage}}
+   tag: ${{CF_BRANCH}}
+   image_name: ppavlov/jenkins-master
+   registry: quay.io
+   credentials:
+      username: ${{quayUsername}}
+      password: ${{quayPassword}}
+  Scan:
+    image: codefresh/klar
+    commands:
+      - set -o pipefail
+      - /klar codefresh/demochat:${{CF_BRANCH}} | tee ./report.txt
+    on_success:
+     metadata:
+        set:
+          - ${{BuildImage.imageId}}:
+              - CLAIR_SECURITY: true
+    on_fail:
+      metadata:
+        set:
+          - ${{BuildImage.imageId}}:
+              - CLAIR_SECURITY: false
+    fail_fast: false
+  archive_report:
+    image: mesosphere/aws-cli
+    commands:
+      - aws s3 cp ./report.txt s3://${{S3_BUCKETNAME}}/${{CF_BUILD_ID}}.txt
+    on_success:
+     metadata:
+        set:
+          - ${{BuildImage.imageId}}:
+              - CLAIR_REPORT: "https://s3.${{AWS_DEFAULT_REGION}}.amazonaws.com/${{S3_BUCKETNAME}}/${{CF_BUILD_ID}}.txt"
