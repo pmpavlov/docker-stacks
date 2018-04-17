@@ -78,6 +78,9 @@ gravatar
 slack
 kubernetes
 kubernetes-credentials
+job-dsl
+jira
+favorite
 blueocean
 blueocean-core-js
 blueocean-autofavorite
@@ -99,3 +102,4 @@ blueocean-i18n
 blueocean-commons
 blueocean-display-url
 blueocean-config
+blueocean-pipeline-scm-api
