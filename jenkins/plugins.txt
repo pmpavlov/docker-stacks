@@ -103,3 +103,4 @@ blueocean-commons
 blueocean-display-url
 blueocean-config
 blueocean-pipeline-scm-api
+pubsub-light
