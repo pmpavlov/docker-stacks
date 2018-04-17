@@ -11,6 +11,7 @@ antisamy-markup-formatter
 token-macro
 build-timeout
 credentials
+saml
 ssh-credentials
 plain-credentials
 credentials-binding
@@ -73,6 +74,7 @@ swarm
 thinBackup
 aws-credentials
 aws-java-sdk
+gravatar
 slack
 kubernetes
 kubernetes-credentials
