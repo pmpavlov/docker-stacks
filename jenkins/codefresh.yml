@@ -41,7 +41,8 @@ steps:
     test-yaml:
       image: 'codefreshio/${{IMAGE_NAME}}:latest'
       ports:
-        - 3000
+        - 8080
+        - 50000
    composition-variables:
      - IMAGE_NAME=jenkins-master
 
