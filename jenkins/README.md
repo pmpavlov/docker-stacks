@@ -1,6 +1,7 @@
 [![Docker Repository on Quay](https://quay.io/repository/ppavlov/jenkins-master/status "Docker Repository on Quay")](https://quay.io/repository/ppavlov/jenkins-master)
 [![Codefresh build status]( https://g.codefresh.io/api/badges/build?repoOwner=pmpavlov&repoName=docker-stacks&branch=master&pipelineName=jenkins-master&accountName=ppavlov&type=cf-1)]( https://g.codefresh.io/repositories/pmpavlov/docker-stacks/builds?filter=trigger:build;branch:master;service:5ad47cf9ff851700012da140~jenkins-master)
 
+
 Jenkins Setup
 =======================
 This repository contains a Docker Swarm setup to create an automated
