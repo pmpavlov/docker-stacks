@@ -3,6 +3,7 @@ steps:
 
   InitVariables:
     title: Init variables
+    image: alpine
     commands:
       - cf_export GIT_BRANCH=${{CF_BRANCH}}
 
