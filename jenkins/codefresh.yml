@@ -1,5 +1,11 @@
 version: '1.0'
 steps:
+
+  InitVariables:
+    title: Init variables
+    commands:
+      - cf_export GIT_BRANCH=${{CF_BRANCH}}
+
   BuildImage:
     type: build
     title: Building Image
@@ -7,13 +13,15 @@ steps:
     working_directory: jenkins
     image_name: ppavlov/jenkins-master
     tag: ${{CF_BRANCH}}
+
   PushToRegistry:
-   type: push
-   candidate: ${{BuildImage}}
-   tag: ${{CF_BRANCH}}
-   image_name: ppavlov/jenkins-master
-   registry: quay
-   fail_fast: false
+    type: push
+    candidate: ${{BuildImage}}
+    tag: ${{CF_BRANCH}}
+    image_name: ppavlov/jenkins-master
+    registry: quay
+    fail_fast: false
+
   PushImageLatest:
    type: push
    title: Push image with latest tag
@@ -24,6 +32,7 @@ steps:
      condition:
        all:
          executeForMasterBranch: "'${{CF_BRANCH}}' == 'master'"
+
   update-branch-protection:
    title: Add "Staging Environment" status check to the branch
    image: cloudposse/github-status-updater
