@@ -1,0 +1,29 @@
+version: '3'
+services:
+
+  logstash:
+    image: logstash
+    networks:
+      - elk
+    ports:
+      - "5000:5000"
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    #volumes:
+    # - logstash:/var/lib/logstash
+    deploy:
+      mode: replicated
+      replicas: 1
+      labels:
+        - "traefik.port=5000"
+        - "traefik.docker.network=elk"
+        - "traefik.frontend.rule=Host:logstash.traefik"
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+      placement:
+        constraints: [node.role != manager]
+
+networks:
+  elk:

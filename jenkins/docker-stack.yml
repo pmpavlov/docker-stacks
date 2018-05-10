@@ -4,7 +4,6 @@ services:
   jenkins:
     image: quay.io/ppavlov/jenkins-master
     networks:
-      - default
       - traefik-net
     deploy:
       replicas: 1
@@ -18,7 +17,7 @@ services:
         parallelism: 1
         delay: 10s
       placement:
-        constraints: [node.role == worker]
+        constraints: [node.role != manager]
     volumes:
       - jenkins_home:/var/jenkins_home
     ports:

@@ -1,9 +1,11 @@
-version: '3.6'
+version: '3'
 
 services:
 
-  postgres:
+  postgresql:
     image: postgres
+    networks:
+      - default
     ports:
      - 5432:5432
     environment:
@@ -24,22 +26,29 @@ services:
         constraints: [node.role != manager]
 
   artifactory:
-    image: jfrog-docker-reg2.bintray.io/jfrog/artifactory-pro:latest
+    image: docker.bintray.io/jfrog/artifactory-oss:latest
+    networks:
+      - default
+      - traefik-net
     ports:
      - 8081:8081
     depends_on:
-     - postgres
+     - postgresql
     deploy:
       mode: replicated
       replicas: 1
+      labels:
+        - "traefik.port=8081"
+        - "traefik.docker.network=traefik-net"
+        - "traefik.frontend.rule=Host:artifactory.traefik"      
       restart_policy:
         condition: on-failure
         delay: 5s
         max_attempts: 3
       placement:
         constraints: [node.role != manager]
-    volumes:
-     - artifactory:/var/opt/jfrog/artifactory
+#    volumes:
+#     - artifactory:/var/opt/jfrog/artifactory
     environment:
      - DB_TYPE=postgresql
      # The following must match the POSTGRES_USER and POSTGRES_PASSWORD values passed to PostgreSQL
@@ -48,27 +57,37 @@ services:
      # Adding extra Java options by uncommenting the following line
      #- EXTRA_JAVA_OPTIONS=-Xmx4g
 
-  nginx:
-    image: jfrog.bintray.com/reg2/jfrog/nginx-artifactory-pro:latest
-    ports:
-     - 80:80
-     - 443:443
-    depends_on:
-     - artifactory
-    deploy:
-      mode: replicated
-      replicas: 1
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 3
-      placement:
-        constraints: [node.role != manager]
-    volumes:
-     - artifactory:/var/opt/jfrog/nginx
-    environment:
-     - ART_BASE_URL=http://artifactory:8081/artifactory
-     - SSL=true
+#  nginx:
+#    image: docker.bintray.io/jfrog/nginx-artifactory-pro:latest
+#    ports:
+#     - 8082:8082
+#     - 443:443
+#    depends_on:
+#     - artifactory
+#    deploy:
+#      mode: replicated
+#      replicas: 1
+#      labels:
+#        - "traefik.port=8082"
+#        - "traefik.frontend.entryPoints=http"
+#        - "traefik.docker.network=traefik-net"
+#        - "traefik.frontend.rule=Host:artifactory.traefik"
+#      restart_policy:
+#        condition: on-failure
+#        delay: 5s
+#        max_attempts: 3
+#      placement:
+#        constraints: [node.role != manager]
+#    volumes:
+#     - artifactory:/var/opt/jfrog/nginx
+#    environment:
+#     - ART_BASE_URL=http://artifactory:8081/artifactory
+#     - SSL=true
 
-volumes:
-  artifactory:
+#volumes:
+#  artifactory:
+networks:
+  traefik-net:
+    external: true
+  default:
+
