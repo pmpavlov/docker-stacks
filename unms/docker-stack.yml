@@ -1,0 +1,12 @@
+version: "3.3"
+services:
+  homebridge:
+    image: oznu/unms:latest  # use "armhf" instead of "latest" for arm devices
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+    environment:
+      - TZ=Europe/London
+    volumes:
+      - ./unms-config:/config

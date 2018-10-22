@@ -4,13 +4,12 @@ services:
   jenkins:
     image: quay.io/ppavlov/jenkins-master
     networks:
-      - default
-      - traefik-net
+      - traefik_traefik-net
     deploy:
       replicas: 1
       labels:
         - "traefik.port=8080"
-        - "traefik.docker.network=traefik-net"
+        - "traefik.docker.network=traefik_traefik-net"
         - "traefik.frontend.rule=Host:jenkins.traefik"
       restart_policy:
         condition: on-failure
@@ -18,7 +17,7 @@ services:
         parallelism: 1
         delay: 10s
       placement:
-        constraints: [node.role == worker]
+        constraints: [node.role != manager]
     volumes:
       - jenkins_home:/var/jenkins_home
     ports:
@@ -35,5 +34,5 @@ secrets:
 volumes:
     jenkins_home:
 networks:
-  traefik-net:
+  traefik_traefik-net:
     external: true

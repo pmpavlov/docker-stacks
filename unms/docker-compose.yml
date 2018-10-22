@@ -1,0 +1,19 @@
+version: "3.3"
+services:
+  unms:
+    image: oznu/unms:latest  # use "armhf" instead of "latest" for arm devices
+    restart: always
+    deploy:
+      mode: global
+    networks:
+      - unms_default 
+    ports:
+      - 80:80
+      - 443:443
+    environment:
+      - TZ=Europe/London
+    volumes:
+      - ../unms-config:/config/
+networks:
+  unms_default:
+#    external: true
