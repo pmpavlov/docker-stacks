@@ -4,16 +4,18 @@ services:
     image: portainer/portainer
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
-      - "portainerdata:/data"
+#      - "portainerdata:/data"
     networks:
-      - traefik-net
+      - traefik_traefik-net
     deploy:
+      mode: replicated
+      replicas: 1
       placement:
         constraints: [node.role == manager]
       labels:
-        - "traefik.enable=true"
         - "traefik.port=9000"
-        - "traefik.docker.network=mystack_traefik-net"
+        - "traefik.docker.network=traefik_traefik-net"
         - "traefik.frontend.rule=Host:portainer.traefik"
 networks:
-  traefik-net:
+  traefik_traefik-net:
+    external: true

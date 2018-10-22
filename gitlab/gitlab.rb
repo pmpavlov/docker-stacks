@@ -1,10 +1,10 @@
 # gitlab.rb
 
-external_url 'http://gitlab.local'
-registry_external_url 'http://registry.gitlab.local'
+external_url 'http://gitlab.traefik'
+registry_external_url 'http://registry.gitlab.traefik'
 
 # Disable services
-postgresql['enable'] = false
+postgresql['enable'] = ture
 redis['enable'] = false
 prometheus['enable'] = false
 postgres_exporter['enable'] = false
@@ -15,10 +15,10 @@ gitlab_rails['db_adapter'] = "postgresql"
 gitlab_rails['db_encoding'] = "unicode"
 
 # database service will be named "postgres" in the stack
-gitlab_rails['db_host'] = "postgres" 
+gitlab_rails['db_host'] = "postgresql"
 gitlab_rails['db_database'] = "gitlab"
 gitlab_rails['db_username'] = "gitlab"
-gitlab_rails['db_password'] = "gitlab"
+gitlab_rails['db_password'] = "password"
 
 # Redis settings
 # redis service will be named "redis" in the stack

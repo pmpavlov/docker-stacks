@@ -1,52 +1,95 @@
-version: "3.6"
+version: "3.3"
 
 services:
-  gitlab:
-    image: "gitlab/gitlab-ce:latest"
-    volumes:
-      - "gitlab_data:/var/opt/gitlab"
-      - "gitlab_logs:/var/log/gitlab"
-      - "gitlab_config:/etc/gitlab"
-    ports:
-      - "22:22"
-      - "443:443"
-      - "80:80"
-    configs:
-      - source: "gitlab.rb"
-        target: "/etc/gitlab/gitlab.rb"
+  postgresql:
+    image: postgres
     networks:
-      - default
-      - proxy
+      - gitlab
+    environment:
+     - POSTGRES_DB=gitlab
+     # The following must match the DB_USER and DB_PASSWORD values passed to Gitlab
+     - POSTGRES_USER=gitlab
+     - POSTGRES_PASSWORD=password
+    #volumes:
+    # - postgres:/var/lib/postgresql/data
     deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+      placement:
+        constraints: [node.role != manager]
+
+  gitlab:
+    image: quay.io/ppavlov/gitlab
+#    volumes:
+#      - "gitlab_data:/var/opt/gitlab"
+#      - "gitlab_logs:/var/log/gitlab"
+#      - "gitlab_config:/etc/gitlab"
+    ports:
+      - "2022:22"
+#    configs:
+#      - source: "gitlab.rb"
+#        target: "/etc/gitlab/gitlab.rb"
+    restart: always
+    networks:
+      - traefik-net
+      - gitlab
+    deploy:
+      mode: replicated
+      replicas: 1
       labels:
         traefik.port: "80"
-        traefik.frontend.rule: "Host:gitlab.localtest.me"
-        traefik.docker.network: "proxy"
+        traefik.frontend.rule: "Host:gitlab.traefik"
+        traefik.docker.network: "traefik-net"
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+      placement:
+        constraints: [node.role != manager]
 
-volumes:
-  gitlab_data:
-    driver: local
-    driver_opts:
-      type: nfs4
-      o: "addr=127.0.0.1"
-      device: ":/gitlab-swarm/gitlab/data"
-  gitlab_logs:
-    driver: local
-    driver_opts:
-      type: nfs4
-      o: "addr=127.0.0.1"
-      device: ":/gitlab-swarm/gitlab/logs"
-  gitlab_config:
-    driver: local
-    driver_opts:
-      type: nfs4
-      o: "addr=127.0.0.1"
-      device: ":/gitlab-swarm/gitlab/config"
+  gilab-runner:
+    image: gitlab/gitlab-runner:alpine
+#    volumes:
+#      - /var/run/docker.sock:/var/run/docker.sock
+#      - /srv/gitlab-runner/config:/etc/gitlab-runner
+#      - /root/.docker:/root/.docker
+#      - /root/.notary:/root/.notary
+    restart: always
+    networks:
+      - gitlab
+    deploy:
+      placement:
+        constraints: [node.role != manager]
 
-configs:
-  gitlab.rb:
-    file: "./gitlab.rb"
+#volumes:
+#  gitlab_data:
+#    driver: local
+#    driver_opts:
+#      type: nfs4
+#      o: "addr=127.0.0.1"
+#      device: ":/gitlab-swarm/gitlab/data"
+#  gitlab_logs:
+#    driver: local
+#    driver_opts:
+#      type: nfs4
+#      o: "addr=127.0.0.1"
+#      device: ":/gitlab-swarm/gitlab/logs"
+#  gitlab_config:
+#    driver: local
+#    driver_opts:
+#      type: nfs4
+#      o: "addr=127.0.0.1"
+#      device: ":/gitlab-swarm/gitlab/config"
+
+#configs:
+#  gitlab.rb:
+#    file: "./gitlab.rb"
 
 networks:
-  proxy:
+  traefik-net:
     external: true
+  gitlab:

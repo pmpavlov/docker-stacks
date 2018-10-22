@@ -15,9 +15,17 @@ services:
       - "8080:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /dev/null:/traefik.toml
+#      - /dev/null:/traefik.toml
     deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
       placement:
         constraints: [node.role==manager]
+
 networks:
   traefik-net:
+    driver: overlay
+    driver_opts:
+      encrypted: "true"
